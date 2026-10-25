@@ -1,14 +1,20 @@
 import React from 'react';
-import { ArrowRight, ExternalLink, Heart, Star, Palette, Share2, Layers, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ExternalLink, Heart, Star, Palette, Share2, Layers, CheckCircle2, RotateCcw } from 'lucide-react';
 
 interface DeveloperSectionProps {
   onBack: () => void;
   onOpenStoryboard: () => void;
+  onResetMemorization?: () => void;
+  onResetProfileSetup?: () => void;
+  onEditProfile?: () => void;
 }
 
 export const DeveloperSection: React.FC<DeveloperSectionProps> = ({
   onBack,
   onOpenStoryboard,
+  onResetMemorization,
+  onResetProfileSetup,
+  onEditProfile,
 }) => {
   const BEHANCE_URL = 'https://www.behance.net/aymenbakkour';
   const FACEBOOK_URL = 'https://www.facebook.com/bakkour.aymen';
@@ -163,6 +169,46 @@ export const DeveloperSection: React.FC<DeveloperSectionProps> = ({
           <Layers className="w-4 h-4 text-amber-700" />
           <span>معاينة مخطط الواجهات العشر (Storyboard Layout)</span>
         </button>
+
+        {/* Edit Profile Button */}
+        {onEditProfile && (
+          <button
+            onClick={onEditProfile}
+            className="w-full py-3 px-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs"
+          >
+            <span>تعديل البيانات الشخصية للطفل (الاسم والعمر والصورة)</span>
+          </button>
+        )}
+
+        {/* Reset Memorization to Zero Button */}
+        {onResetMemorization && (
+          <button
+            onClick={() => {
+              if (window.confirm('هل تريد بالتأكيد تصفير كافة بيانات الحفظ والبدء من الصفر؟')) {
+                onResetMemorization();
+              }
+            }}
+            className="w-full py-3 px-4 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs"
+          >
+            <RotateCcw className="w-4 h-4 text-rose-600" />
+            <span>تصفير بيانات الحفظ (البدء من الصفر)</span>
+          </button>
+        )}
+
+        {/* Reset First-Time Launch Flow Button */}
+        {onResetProfileSetup && (
+          <button
+            onClick={() => {
+              if (window.confirm('هل تريد إعادة تعيين التطبيق كأول مرة لتجربة شاشة إدخال البيانات الشخصية بعد الحركة؟')) {
+                onResetProfileSetup();
+              }
+            }}
+            className="w-full py-2.5 px-4 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-[11px] font-bold flex items-center justify-center gap-2 transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
+            <span>إعادة التجربة كأول مرة (مسح البيانات والشروع من البداية)</span>
+          </button>
+        )}
       </div>
 
       {/* Footer copyright */}

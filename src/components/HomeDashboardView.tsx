@@ -136,8 +136,12 @@ export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
         <div className="bg-gradient-to-br from-[#FEFBF2] to-[#FFFDF9] rounded-3xl p-5 shadow-sm border-2 border-emerald-100/70 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500">أين وصلت الآن؟</span>
-            <span className="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-0.5 rounded-full">
-              قيد الحفظ
+            <span className={`text-xs font-bold px-3 py-0.5 rounded-full ${
+              currentSurahMemorizedCount > 0
+                ? 'text-amber-700 bg-amber-100'
+                : 'text-emerald-700 bg-emerald-100'
+            }`}>
+              {currentSurahMemorizedCount > 0 ? 'قيد الحفظ' : 'جاهز للبدء'}
             </span>
           </div>
 
@@ -175,7 +179,7 @@ export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
             onClick={() => onContinueMemorization(currentSurah.id)}
             className="w-full py-3 px-4 rounded-2xl bg-[#105C45] hover:bg-[#0c4b37] text-white font-bold text-sm shadow-md shadow-emerald-950/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
           >
-            <span>متابعة الحفظ</span>
+            <span>{currentSurahMemorizedCount > 0 ? 'متابعة الحفظ' : 'ابدأ حفظ السورة الآن'}</span>
             <ArrowLeft className="w-4 h-4" />
           </button>
         </div>
@@ -207,23 +211,6 @@ export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Mini Banner: About Aymen Bakkour */}
-        <div
-          onClick={onOpenDeveloper}
-          className="bg-gradient-to-r from-emerald-800 to-[#105C45] rounded-2xl p-3 text-white flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-amber-300">
-              <Star className="w-4 h-4 fill-amber-300 text-amber-300" />
-            </div>
-            <div>
-              <div className="text-xs font-bold">تصميم وتطوير: أيمن بكور</div>
-              <div className="text-[11px] text-emerald-100">انقر للتعرف على المطور وروابط بيهانس وفيسبوك</div>
-            </div>
-          </div>
-          <ChevronLeft className="w-4 h-4 text-emerald-200" />
         </div>
       </div>
 

@@ -170,17 +170,30 @@ export const AchievementsView: React.FC<AchievementsViewProps> = ({
               <span className="text-xs text-emerald-700 font-bold">{certificates.length} شهادات</span>
             </h3>
 
-            <div className="space-y-3">
-              {certificates.map((cert) => (
-                <div
-                  key={cert.id}
-                  className="bg-white rounded-3xl p-4 shadow-sm border border-amber-100 flex items-center justify-between gap-3"
-                >
-                  {/* Certificate Mini Preview Thumbnail */}
+            {certificates.length === 0 ? (
+              <div className="bg-white rounded-3xl p-6 text-center shadow-sm border border-amber-100 space-y-3">
+                <div className="w-14 h-14 mx-auto rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                  <Award className="w-7 h-7" />
+                </div>
+                <h4 className="text-sm font-bold text-slate-800 font-cairo">
+                  لم تحصل على شهادات بعد
+                </h4>
+                <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
+                  ابدأ بحفظ وتثبيت سور جزء عم المبارك، وستحصل على شهادات تكريم وتفوق باسمك مع كل إنجاز تحققه! 🌟
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {certificates.map((cert) => (
                   <div
-                    onClick={() => onViewCertificate(cert)}
-                    className="w-16 h-20 rounded-xl bg-[#FFFBF0] border-2 border-amber-300/80 p-1 flex flex-col items-center justify-center text-center cursor-pointer hover:border-amber-500 transition-colors shrink-0 shadow-xs"
+                    key={cert.id}
+                    className="bg-white rounded-3xl p-4 shadow-sm border border-amber-100 flex items-center justify-between gap-3"
                   >
+                    {/* Certificate Mini Preview Thumbnail */}
+                    <div
+                      onClick={() => onViewCertificate(cert)}
+                      className="w-16 h-20 rounded-xl bg-[#FFFBF0] border-2 border-amber-300/80 p-1 flex flex-col items-center justify-center text-center cursor-pointer hover:border-amber-500 transition-colors shrink-0 shadow-xs"
+                    >
                     <div className="w-4 h-4 rounded-full bg-amber-200 mb-1 flex items-center justify-center">
                       <Star className="w-2.5 h-2.5 text-amber-700 fill-amber-700" />
                     </div>
@@ -224,6 +237,7 @@ export const AchievementsView: React.FC<AchievementsViewProps> = ({
                 </div>
               ))}
             </div>
+            )}
           </div>
         )}
 

@@ -695,8 +695,7 @@ export const INITIAL_BADGES: BadgeItem[] = [
     category: 'surah',
     icon: 'star',
     color: '#EAB308',
-    isUnlocked: true,
-    unlockedDate: '2024/10/15',
+    isUnlocked: false,
     requiredTarget: 1
   },
   {
@@ -706,8 +705,7 @@ export const INITIAL_BADGES: BadgeItem[] = [
     category: 'percentage',
     icon: 'compass',
     color: '#10B981',
-    isUnlocked: true,
-    unlockedDate: '2024/11/02',
+    isUnlocked: false,
     requiredTarget: 10
   },
   {
@@ -742,23 +740,5 @@ export const INITIAL_BADGES: BadgeItem[] = [
   }
 ];
 
-export const INITIAL_CERTIFICATES: CertificateItem[] = [
-  {
-    id: 'cert-1',
-    title: 'شهادة أول سورة',
-    childName: 'عمر',
-    surahName: 'سورة النبأ',
-    ayahsCount: 40,
-    date: '2024/10/15',
-    badgeTitle: 'بداية مباركة'
-  },
-  {
-    id: 'cert-2',
-    title: 'شهادة 25% من جزء عم',
-    childName: 'عمر',
-    surahName: 'مجموعة سور جزء عم',
-    ayahsCount: 136,
-    date: '2024/11/20',
-    badgeTitle: 'صاحب الهمة'
-  }
-];
+export const INITIAL_CERTIFICATES: CertificateItem[] = [];
+

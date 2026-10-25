@@ -43,41 +43,65 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>(autostart ? 'home' : 'splash');
   const [showStoryboardModal, setShowStoryboardModal] = useState<boolean>(false);
 
-  // Child Profile state (seeded with Omar matching the design storyboard)
-  const [profile, setProfile] = useState<ChildProfile>({
-    name: 'عمر',
-    age: 7,
-    avatarId: 'boy-omar',
-    dailyGoal: 5,
-    todayCompletedAyahs: 3,
-    reviewSurahsCount: 3,
+  // Check if personal data is already registered
+  const [isRegistered, setIsRegistered] = useState<boolean>(() => {
+    try {
+      const reg = localStorage.getItem('quran_child_profile_registered');
+      if (reg === 'true') return true;
+      if (reg === 'false') return false;
+      const saved = localStorage.getItem('quran_child_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name && parsed.name.trim() !== '') {
+          return true;
+        }
+      }
+    } catch {}
+    return false;
   });
 
-  // Memorization logs seeded to match the storyboard:
-  // 136 of 564 ayahs = 24%, 9 of 37 surahs completed
-  const [logs, setLogs] = useState<MemorizationLog[]>([
-    // Surah 78 (An-Naba): 32 ayahs (current progress)
-    { id: 'log-1', surahId: 78, fromAyah: 1, toAyah: 32, date: '2024/10/15', durationMinutes: 20 },
-    // 9 completed short surahs (40 ayahs total):
-    { id: 'log-2', surahId: 108, fromAyah: 1, toAyah: 3, date: '2024/10/01', durationMinutes: 10 },
-    { id: 'log-3', surahId: 110, fromAyah: 1, toAyah: 3, date: '2024/10/02', durationMinutes: 10 },
-    { id: 'log-4', surahId: 103, fromAyah: 1, toAyah: 3, date: '2024/10/03', durationMinutes: 10 },
-    { id: 'log-5', surahId: 106, fromAyah: 1, toAyah: 4, date: '2024/10/04', durationMinutes: 15 },
-    { id: 'log-6', surahId: 112, fromAyah: 1, toAyah: 4, date: '2024/10/05', durationMinutes: 15 },
-    { id: 'log-7', surahId: 105, fromAyah: 1, toAyah: 5, date: '2024/10/06', durationMinutes: 15 },
-    { id: 'log-8', surahId: 113, fromAyah: 1, toAyah: 5, date: '2024/10/07', durationMinutes: 15 },
-    { id: 'log-9', surahId: 114, fromAyah: 1, toAyah: 6, date: '2024/10/08', durationMinutes: 15 },
-    { id: 'log-10', surahId: 107, fromAyah: 1, toAyah: 7, date: '2024/10/09', durationMinutes: 15 },
-    // Partially memorized surahs (64 ayahs total, so total = 32 + 40 + 64 = 136 ayahs):
-    { id: 'log-11', surahId: 79, fromAyah: 1, toAyah: 20, date: '2024/10/10' },
-    { id: 'log-12', surahId: 80, fromAyah: 1, toAyah: 20, date: '2024/10/11' },
-    { id: 'log-13', surahId: 81, fromAyah: 1, toAyah: 14, date: '2024/10/12' },
-    { id: 'log-14', surahId: 82, fromAyah: 1, toAyah: 10, date: '2024/10/13' },
-  ]);
+  // Child Profile state (starts clean with 0 memorized ayahs)
+  const [profile, setProfile] = useState<ChildProfile>(() => {
+    try {
+      const saved = localStorage.getItem('quran_child_profile');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      name: 'عمر',
+      age: 7,
+      avatarId: 'boy-omar',
+      dailyGoal: 5,
+      todayCompletedAyahs: 0,
+      reviewSurahsCount: 0,
+    };
+  });
 
-  const [badges, setBadges] = useState<BadgeItem[]>(INITIAL_BADGES);
-  const [certificates, setCertificates] = useState<CertificateItem[]>(INITIAL_CERTIFICATES);
-  const [selectedCertificate, setSelectedCertificate] = useState<CertificateItem>(INITIAL_CERTIFICATES[0]);
+  // Memorization logs: starts at 0 (empty list) for learning from scratch
+  const [logs, setLogs] = useState<MemorizationLog[]>(() => {
+    try {
+      const saved = localStorage.getItem('quran_memorization_logs');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return [];
+  });
+
+  const [badges, setBadges] = useState<BadgeItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('quran_badges');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_BADGES;
+  });
+
+  const [certificates, setCertificates] = useState<CertificateItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('quran_certificates');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_CERTIFICATES;
+  });
+
+  const [selectedCertificate, setSelectedCertificate] = useState<CertificateItem | null>(null);
 
   // Current active surah being read / memorized
   const [currentSurahId, setCurrentSurahId] = useState<number>(78);
@@ -85,6 +109,31 @@ export default function App() {
 
   // Active Ayah for Tafseer modal
   const [selectedAyah, setSelectedAyah] = useState<Ayah>(currentSurah.ayahs[0]);
+
+  // Persist state to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('quran_child_profile', JSON.stringify(profile));
+    } catch {}
+  }, [profile]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('quran_memorization_logs', JSON.stringify(logs));
+    } catch {}
+  }, [logs]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('quran_badges', JSON.stringify(badges));
+    } catch {}
+  }, [badges]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('quran_certificates', JSON.stringify(certificates));
+    } catch {}
+  }, [certificates]);
 
   // Re-evaluate badges whenever logs change
   useEffect(() => {
@@ -109,6 +158,23 @@ export default function App() {
       setCertificates(prev => [...newCerts, ...prev]);
     }
   }, [logs, profile.name]);
+
+  // Function to completely reset memorization data back to zero
+  const handleResetMemorization = () => {
+    setLogs([]);
+    setBadges(INITIAL_BADGES);
+    setCertificates([]);
+    setProfile(prev => ({
+      ...prev,
+      todayCompletedAyahs: 0,
+      reviewSurahsCount: 0,
+    }));
+    try {
+      localStorage.removeItem('quran_memorization_logs');
+      localStorage.removeItem('quran_badges');
+      localStorage.removeItem('quran_certificates');
+    } catch {}
+  };
 
   const handleSaveMemorization = (
     fromAyah: number,
@@ -156,8 +222,22 @@ export default function App() {
         <div className="w-full">
           {currentScreen === 'splash' && (
             <SplashView
-              onStart={() => setCurrentScreen('profile-setup')}
-              onLoginExisting={() => setCurrentScreen('home')}
+              isRegistered={isRegistered}
+              profileName={profile.name}
+              onProceed={() => {
+                if (isRegistered) {
+                  setCurrentScreen('home');
+                } else {
+                  setCurrentScreen('profile-setup');
+                }
+              }}
+              onLoginExisting={() => {
+                setIsRegistered(true);
+                try {
+                  localStorage.setItem('quran_child_profile_registered', 'true');
+                } catch {}
+                setCurrentScreen('home');
+              }}
               onOpenStoryboard={() => setShowStoryboardModal(true)}
               onOpenDeveloper={() => setCurrentScreen('developer')}
             />
@@ -168,15 +248,32 @@ export default function App() {
               initialProfile={profile}
               onSave={(updated) => {
                 setProfile(updated);
+                setIsRegistered(true);
+                try {
+                  localStorage.setItem('quran_child_profile', JSON.stringify(updated));
+                  localStorage.setItem('quran_child_profile_registered', 'true');
+                } catch {}
                 setCurrentScreen('tour');
               }}
-              onBack={() => setCurrentScreen('splash')}
+              onBack={() => {
+                if (isRegistered) {
+                  setCurrentScreen('home');
+                } else {
+                  setCurrentScreen('splash');
+                }
+              }}
             />
           )}
 
           {currentScreen === 'tour' && (
             <TourView
-              onComplete={() => setCurrentScreen('home')}
+              onComplete={() => {
+                setIsRegistered(true);
+                try {
+                  localStorage.setItem('quran_child_profile_registered', 'true');
+                } catch {}
+                setCurrentScreen('home');
+              }}
               onBack={() => setCurrentScreen('profile-setup')}
             />
           )}
@@ -190,7 +287,7 @@ export default function App() {
               onNavigateTab={(tab) => {
                 if (tab === 'surahs') setCurrentScreen('surahs-list');
                 else if (tab === 'achievements') setCurrentScreen('achievements');
-                else if (tab === 'profile') setCurrentScreen('developer');
+                else if (tab === 'profile') setCurrentScreen('profile-setup');
                 else if (tab === 'review') setCurrentScreen('surah-reader');
               }}
               onOpenDeveloper={() => setCurrentScreen('developer')}
@@ -253,7 +350,7 @@ export default function App() {
             />
           )}
 
-          {currentScreen === 'certificate' && (
+          {currentScreen === 'certificate' && selectedCertificate && (
             <CertificateModal
               certificate={selectedCertificate}
               onClose={() => setCurrentScreen('achievements')}
@@ -264,6 +361,24 @@ export default function App() {
             <DeveloperSection
               onBack={() => setCurrentScreen('home')}
               onOpenStoryboard={() => setShowStoryboardModal(true)}
+              onResetMemorization={handleResetMemorization}
+              onEditProfile={() => setCurrentScreen('profile-setup')}
+              onResetProfileSetup={() => {
+                setIsRegistered(false);
+                setProfile({
+                  name: 'عمر',
+                  age: 7,
+                  avatarId: 'boy-omar',
+                  dailyGoal: 5,
+                  todayCompletedAyahs: 0,
+                  reviewSurahsCount: 0,
+                });
+                try {
+                  localStorage.removeItem('quran_child_profile');
+                  localStorage.setItem('quran_child_profile_registered', 'false');
+                } catch {}
+                setCurrentScreen('splash');
+              }}
             />
           )}
         </div>

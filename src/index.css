@@ -72,3 +72,52 @@
     display: none !important;
   }
 }
+
+/* Animated Splash Screen Keyframes & Utilities */
+@keyframes lanternSwingLeft {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(4deg); }
+}
+
+@keyframes lanternSwingRight {
+  0%, 100% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes pulseHalo {
+  0%, 100% { transform: scale(0.95); opacity: 0.3; }
+  50% { transform: scale(1.18); opacity: 0.65; }
+}
+
+@keyframes twinkleStar {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+.animate-lantern-left {
+  transform-origin: top center;
+  animation: lanternSwingLeft 3.8s ease-in-out infinite;
+}
+
+.animate-lantern-right {
+  transform-origin: top center;
+  animation: lanternSwingRight 4.2s ease-in-out infinite;
+}
+
+.animate-float-gentle {
+  animation: floatGentle 3s ease-in-out infinite;
+}
+
+.animate-pulse-halo {
+  animation: pulseHalo 2.5s ease-in-out infinite;
+}
+
+.animate-twinkle-star {
+  animation: twinkleStar 2s ease-in-out infinite;
+}
+
