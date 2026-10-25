@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+    --font-quran: 'Amiri Quran', 'Scheherazade New', 'Traditional Arabic', serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+  }
+}
+
+.font-quran {
+  font-family: var(--font-quran);
+  line-height: 2.2;
+}
+
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+.font-tajawal {
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* Islamic pattern background helper */
+.bg-islamic-pattern {
+  background-color: #f7f4ea;
+  background-image: radial-gradient(#105c45 0.75px, transparent 0.75px), radial-gradient(#d4af37 0.75px, #f7f4ea 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+.bg-stars-night {
+  background: radial-gradient(ellipse at top, #133a2e 0%, #081d16 60%, #030e0a 100%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1ede1;
+}
+::-webkit-scrollbar-thumb {
+  background: #155e46;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0d4231;
+}
+
+/* Printable certificate styling */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-certificate, #printable-certificate * {
+    visibility: visible;
+  }
+  #printable-certificate {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

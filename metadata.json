@@ -1,0 +1,6 @@
+{
+  "name": "رحلتي مع القرآن | جزء عم للأطفال",
+  "description": "تطبيق تفاعلي مميز لحفظ وفهم سور جزء عم للأطفال بالصوت والتفسير المبسط والأوسمة - تصميم وتطوير أيمن بكور",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
