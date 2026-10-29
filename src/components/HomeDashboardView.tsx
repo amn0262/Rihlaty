@@ -10,9 +10,10 @@ import {
   CheckCircle,
   Star,
   ChevronLeft,
-  Heart
+  Heart,
+  Bookmark
 } from 'lucide-react';
-import { ChildProfile, MemorizationLog } from '../types';
+import { ChildProfile, MemorizationLog, BookmarkItem } from '../types';
 import { ChildAvatar } from './ChildAvatar';
 import { SURAHS_LIST_SUMMARY } from '../data/quranJuzAmma';
 import {
@@ -29,6 +30,8 @@ interface HomeDashboardViewProps {
   onContinueMemorization: (surahId: number) => void;
   onNavigateTab: (tab: 'home' | 'surahs' | 'review' | 'achievements' | 'profile') => void;
   onOpenDeveloper: () => void;
+  bookmark?: BookmarkItem | null;
+  onResumeBookmark?: (surahId: number, ayahNumber: number) => void;
 }
 
 export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
@@ -38,6 +41,8 @@ export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
   onContinueMemorization,
   onNavigateTab,
   onOpenDeveloper,
+  bookmark,
+  onResumeBookmark,
 }) => {
   // Surah counts map for calculation
   const ayahCountsMap: Record<number, number> = {};
@@ -84,6 +89,50 @@ export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
             <span className="text-[10px] font-bold mt-0.5">المطور</span>
           </button>
         </div>
+
+        {/* Bookmark Resume Card (Book Mark - مكان الوقوف) */}
+        {bookmark && (
+          <div
+            onClick={() => onResumeBookmark && onResumeBookmark(bookmark.surahId, bookmark.ayahNumber)}
+            className="bg-gradient-to-r from-amber-500/15 via-[#FEF3C7] to-amber-500/20 rounded-3xl p-4 shadow-sm border-2 border-amber-400 hover:border-amber-500 transition-all cursor-pointer group space-y-2.5 active:scale-[0.99]"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+                  <Bookmark className="w-4 h-4 fill-white" />
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-amber-900 block font-cairo">
+                    مكان الوقوف الأخير 🔖 (Book Mark)
+                  </span>
+                  <span className="text-xs text-slate-600 font-medium">
+                    الجزء {bookmark.juz} · سورة {bookmark.surahName}
+                  </span>
+                </div>
+              </div>
+
+              <span className="text-xs font-bold text-amber-950 bg-amber-200/90 px-2.5 py-0.5 rounded-full font-mono">
+                آية {bookmark.ayahNumber}
+              </span>
+            </div>
+
+            {bookmark.ayahText && (
+              <p className="text-xs font-quran text-slate-700 line-clamp-1 bg-white/70 px-3 py-1.5 rounded-xl border border-amber-200/70">
+                ﴿ {bookmark.ayahText} ﴾
+              </p>
+            )}
+
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-[10px] text-amber-800">
+                انقر للمتابعة الفورية من مكان وقوفك
+              </span>
+              <div className="flex items-center gap-1 text-xs font-bold text-[#105C45] group-hover:text-emerald-950">
+                <span>متابعة التلاوة</span>
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Progress Card (Matching Storyboard: Circular 24%) */}
         <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 flex items-center justify-between">
@@ -214,8 +263,8 @@ export const HomeDashboardView: React.FC<HomeDashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Fixed Bottom Navigation Bar (5 tabs) */}
-      <div className="fixed sm:absolute bottom-0 left-0 right-0 h-18 bg-white border-t border-slate-200/80 px-4 flex items-center justify-around z-30 shadow-lg">
+      {/* Fixed Bottom Navigation Bar (5 tabs) - z-50 permanent visibility */}
+      <div className="fixed sm:absolute bottom-0 left-0 right-0 h-18 bg-white border-t border-slate-200/80 px-4 flex items-center justify-around z-50 shadow-lg">
         <button
           onClick={() => onNavigateTab('home')}
           className="flex flex-col items-center justify-center gap-1 text-[#105C45] font-bold"

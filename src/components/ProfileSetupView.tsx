@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowRight, Camera, ChevronDown } from 'lucide-react';
-import { ChildProfile } from '../types';
+import { ArrowRight, Camera, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { ChildProfile, ReciterId, RECITERS_LIST } from '../types';
 import { AVATAR_OPTIONS } from '../data/avatars';
 import { ChildAvatar } from './ChildAvatar';
 
@@ -18,6 +18,7 @@ export const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({
   const [name, setName] = useState(initialProfile.name || 'عمر');
   const [age, setAge] = useState<number>(initialProfile.age || 7);
   const [selectedAvatar, setSelectedAvatar] = useState<string>(initialProfile.avatarId || 'boy-omar');
+  const [selectedReciter, setSelectedReciter] = useState<ReciterId>(initialProfile.selectedReciter || 'alafasy');
   const [error, setError] = useState<string>('');
 
   const handleNext = () => {
@@ -31,6 +32,7 @@ export const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({
       name: name.trim(),
       age,
       avatarId: selectedAvatar,
+      selectedReciter,
     });
   };
 
@@ -143,6 +145,42 @@ export const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({
                     }`}
                   >
                     <ChildAvatar avatarId={item.id} size="sm" showBorder={false} />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Choose Reciter */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2 text-right">
+              القارئ المفضل
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {RECITERS_LIST.map((r) => {
+                const isSelected = selectedReciter === r.id;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setSelectedReciter(r.id)}
+                    className={`p-2.5 rounded-2xl border text-right transition-all flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-emerald-50/90 border-[#105C45] ring-2 ring-[#105C45]/20 shadow-xs'
+                        : 'bg-white border-[#E2D8C3] hover:border-slate-300 opacity-80 hover:opacity-100'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className={`font-bold font-cairo text-xs ${isSelected ? 'text-[#105C45]' : 'text-slate-800'}`}>
+                        {r.name}
+                      </span>
+                      {isSelected && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#105C45]" />
+                      )}
+                    </div>
+                    <span className="text-[10px] text-slate-500 mt-1 line-clamp-1">
+                      {r.description}
+                    </span>
                   </button>
                 );
               })}

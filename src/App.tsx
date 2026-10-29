@@ -6,7 +6,9 @@ import {
   BadgeItem,
   CertificateItem,
   Ayah,
-  Surah
+  Surah,
+  ReciterId,
+  BookmarkItem
 } from './types';
 import {
   SURAHS_LIST_SUMMARY,
@@ -103,12 +105,51 @@ export default function App() {
 
   const [selectedCertificate, setSelectedCertificate] = useState<CertificateItem | null>(null);
 
+  // Selected reciter: can be 'ghamadi' (سعد الغامدي) or 'alafasy' (مشاري العفاسي)
+  const [selectedReciter, setSelectedReciter] = useState<ReciterId>(() => {
+    try {
+      const savedReciter = localStorage.getItem('quran_selected_reciter') as ReciterId;
+      if (savedReciter === 'ghamadi' || savedReciter === 'alafasy') return savedReciter;
+      const savedProfile = localStorage.getItem('quran_child_profile');
+      if (savedProfile) {
+        const parsed = JSON.parse(savedProfile);
+        if (parsed.selectedReciter) return parsed.selectedReciter;
+      }
+    } catch {}
+    return 'ghamadi'; // Saad Al-Ghamdi
+  });
+
+  const handleSelectReciter = (reciter: ReciterId) => {
+    setSelectedReciter(reciter);
+    setProfile(prev => ({ ...prev, selectedReciter: reciter }));
+    try {
+      localStorage.setItem('quran_selected_reciter', reciter);
+    } catch {}
+  };
+
   // Current active surah being read / memorized
   const [currentSurahId, setCurrentSurahId] = useState<number>(78);
-  const currentSurah = getSurahWithAyahs(currentSurahId);
+  const [targetAyahNumber, setTargetAyahNumber] = useState<number | undefined>(undefined);
+  const currentSurah = getSurahWithAyahs(currentSurahId, selectedReciter);
 
   // Active Ayah for Tafseer modal
   const [selectedAyah, setSelectedAyah] = useState<Ayah>(currentSurah.ayahs[0]);
+
+  // Persistent Bookmark (Book Mark - مكان الوقوف)
+  const [bookmark, setBookmark] = useState<BookmarkItem | null>(() => {
+    try {
+      const saved = localStorage.getItem('quran_bookmark');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+
+  const handleSetBookmark = (newBm: BookmarkItem) => {
+    setBookmark(newBm);
+    try {
+      localStorage.setItem('quran_bookmark', JSON.stringify(newBm));
+    } catch {}
+  };
 
   // Persist state to localStorage
   useEffect(() => {
@@ -200,8 +241,9 @@ export default function App() {
     setCurrentScreen('surah-reader');
   };
 
-  const handleSelectSurah = (surahId: number) => {
+  const handleSelectSurah = (surahId: number, startAyah?: number) => {
     setCurrentSurahId(surahId);
+    setTargetAyahNumber(startAyah);
     setCurrentScreen('surah-reader');
   };
 
@@ -284,6 +326,8 @@ export default function App() {
               logs={logs}
               currentSurahId={currentSurahId}
               onContinueMemorization={handleSelectSurah}
+              bookmark={bookmark}
+              onResumeBookmark={(sId, aNum) => handleSelectSurah(sId, aNum)}
               onNavigateTab={(tab) => {
                 if (tab === 'surahs') setCurrentScreen('surahs-list');
                 else if (tab === 'achievements') setCurrentScreen('achievements');
@@ -298,6 +342,7 @@ export default function App() {
             <SurahsListView
               logs={logs}
               onSelectSurah={handleSelectSurah}
+              currentBookmark={bookmark}
               onBack={() => setCurrentScreen('home')}
             />
           )}
@@ -306,9 +351,14 @@ export default function App() {
             <SurahReaderView
               surah={currentSurah}
               logs={logs}
+              selectedReciter={selectedReciter}
+              onChangeReciter={handleSelectReciter}
               onOpenAyahTafseer={handleOpenAyahTafseer}
               onOpenLogMemorization={() => setCurrentScreen('log-memorization')}
               onBack={() => setCurrentScreen('surahs-list')}
+              currentBookmark={bookmark}
+              onSetBookmark={handleSetBookmark}
+              initialAyahNumber={targetAyahNumber}
             />
           )}
 
@@ -316,6 +366,8 @@ export default function App() {
             <TafseerDetailModal
               ayah={selectedAyah}
               surah={currentSurah}
+              selectedReciter={selectedReciter}
+              onChangeReciter={handleSelectReciter}
               onClose={() => setCurrentScreen('surah-reader')}
               onNextAyah={() => {
                 const nextNum = selectedAyah.numberInSurah + 1;

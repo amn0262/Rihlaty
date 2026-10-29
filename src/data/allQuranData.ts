@@ -8,6 +8,8 @@ export interface QuranJuz {
   endSurah: string;
   surahIds: number[];
   ayahsCount: number;
+  startSurahId: number;
+  startAyahNumber: number;
 }
 
 // Complete list of all 114 Surahs of the Holy Quran
@@ -131,34 +133,34 @@ export const ALL_114_SURAHS: Omit<Surah, 'ayahs'>[] = [
 
 // Complete list of all 30 Ajzaa of the Holy Quran
 export const ALL_30_AJZAA: QuranJuz[] = [
-  { number: 1, name: 'الجزء الأول', arabicName: 'الم', startSurah: 'الفاتحة', endSurah: 'البقرة (141)', surahIds: [1, 2], ayahsCount: 148 },
-  { number: 2, name: 'الجزء الثاني', arabicName: 'سَيَقُولُ', startSurah: 'البقرة (142)', endSurah: 'البقرة (252)', surahIds: [2], ayahsCount: 111 },
-  { number: 3, name: 'الجزء الثالث', arabicName: 'تِلْكَ الرُّسُلُ', startSurah: 'البقرة (253)', endSurah: 'آل عمران (92)', surahIds: [2, 3], ayahsCount: 126 },
-  { number: 4, name: 'الجزء الرابع', arabicName: 'لَنْ تَنَالُوا', startSurah: 'آل عمران (93)', endSurah: 'النساء (23)', surahIds: [3, 4], ayahsCount: 131 },
-  { number: 5, name: 'الجزء الخامس', arabicName: 'وَالمُحْصَنَاتُ', startSurah: 'النساء (24)', endSurah: 'النساء (147)', surahIds: [4], ayahsCount: 124 },
-  { number: 6, name: 'الجزء السادس', arabicName: 'لَا يُحِبُّ اللَّهُ', startSurah: 'النساء (148)', endSurah: 'المائدة (81)', surahIds: [4, 5], ayahsCount: 110 },
-  { number: 7, name: 'الجزء السابع', arabicName: 'وَإِذَا سَمِعُوا', startSurah: 'المائدة (82)', endSurah: 'الأنعام (110)', surahIds: [5, 6], ayahsCount: 149 },
-  { number: 8, name: 'الجزء الثامن', arabicName: 'وَلَوْ أَنَّنَا', startSurah: 'الأنعام (111)', endSurah: 'الأعراف (87)', surahIds: [6, 7], ayahsCount: 142 },
-  { number: 9, name: 'الجزء التاسع', arabicName: 'قَالَ المَلَأُ', startSurah: 'الأعراف (88)', endSurah: 'الأنفال (40)', surahIds: [7, 8], ayahsCount: 159 },
-  { number: 10, name: 'الجزء العاشر', arabicName: 'وَاعْلَمُوا', startSurah: 'الأنفال (41)', endSurah: 'التوبة (92)', surahIds: [8, 9], ayahsCount: 127 },
-  { number: 11, name: 'الجزء الحادي عشر', arabicName: 'يَعْتَذِرُونَ', startSurah: 'التوبة (93)', endSurah: 'هود (5)', surahIds: [9, 10, 11], ayahsCount: 151 },
-  { number: 12, name: 'الجزء الثاني عشر', arabicName: 'وَمَا مِنْ دَابَّةٍ', startSurah: 'هود (6)', endSurah: 'يوسف (52)', surahIds: [11, 12], ayahsCount: 170 },
-  { number: 13, name: 'الجزء الثالث عشر', arabicName: 'وَمَا أُبَرِّئُ', startSurah: 'يوسف (53)', endSurah: 'إبراهيم (52)', surahIds: [12, 13, 14], ayahsCount: 154 },
-  { number: 14, name: 'الجزء الرابع عشر', arabicName: 'رُبَمَا', startSurah: 'الحجر (1)', endSurah: 'النحل (128)', surahIds: [15, 16], ayahsCount: 227 },
-  { number: 15, name: 'الجزء الخامس عشر', arabicName: 'سُبْحَانَ الَّذِي', startSurah: 'الإسراء (1)', endSurah: 'الكهف (74)', surahIds: [17, 18], ayahsCount: 185 },
-  { number: 16, name: 'الجزء السادس عشر', arabicName: 'قَالَ أَلَمْ', startSurah: 'الكهف (75)', endSurah: 'طه (135)', surahIds: [18, 19, 20], ayahsCount: 269 },
-  { number: 17, name: 'الجزء السابع عشر', arabicName: 'اقْتَرَبَ لِلنَّاسِ', startSurah: 'الأنبياء (1)', endSurah: 'الحج (78)', surahIds: [21, 22], ayahsCount: 190 },
-  { number: 18, name: 'الجزء الثامن عشر', arabicName: 'قَدْ أَفْلَحَ', startSurah: 'المؤمنون (1)', endSurah: 'الفرقان (20)', surahIds: [23, 24, 25], ayahsCount: 202 },
-  { number: 19, name: 'الجزء التاسع عشر', arabicName: 'وَقَالَ الَّذِينَ', startSurah: 'الفرقان (21)', endSurah: 'النمل (55)', surahIds: [25, 26, 27], ayahsCount: 339 },
-  { number: 20, name: 'الجزء العشرون', arabicName: 'فَمَا كَانَ جَوَابَ', startSurah: 'النمل (56)', endSurah: 'العنكبوت (45)', surahIds: [27, 28, 29], ayahsCount: 171 },
-  { number: 21, name: 'الجزء الحادي والعشرون', arabicName: 'وَلَا تُجَادِلُوا', startSurah: 'العنكبوت (46)', endSurah: 'الأحزاب (30)', surahIds: [29, 30, 31, 32, 33], ayahsCount: 178 },
-  { number: 22, name: 'الجزء الثاني والعشرون', arabicName: 'وَمَنْ يَقْنُتْ', startSurah: 'الأحزاب (31)', endSurah: 'يس (27)', surahIds: [33, 34, 35, 36], ayahsCount: 169 },
-  { number: 23, name: 'الجزء الثالث والعشرون', arabicName: 'وَمَا أَنْزَلْنَا', startSurah: 'يس (28)', endSurah: 'الزمر (31)', surahIds: [36, 37, 38, 39], ayahsCount: 357 },
-  { number: 24, name: 'الجزء الرابع والعشرون', arabicName: 'فَمَنْ أَظْلَمُ', startSurah: 'الزمر (32)', endSurah: 'فصلت (46)', surahIds: [39, 40, 41], ayahsCount: 175 },
-  { number: 25, name: 'الجزء الخامس والعشرون', arabicName: 'إِلَيْهِ يُرَدُّ', startSurah: 'فصلت (47)', endSurah: 'الجاثية (37)', surahIds: [41, 42, 43, 44, 45], ayahsCount: 246 },
-  { number: 26, name: 'الجزء السادس والعشرون', arabicName: 'حم', startSurah: 'الأحقاف (1)', endSurah: 'الذاريات (30)', surahIds: [46, 47, 48, 49, 50, 51], ayahsCount: 195 },
-  { number: 27, name: 'الجزء السابع والعشرون', arabicName: 'قَالَ فَمَا خَطْبُكُمْ', startSurah: 'الذاريات (31)', endSurah: 'الحديد (29)', surahIds: [51, 52, 53, 54, 55, 56, 57], ayahsCount: 399 },
-  { number: 28, name: 'الجزء الثامن والعشرون', arabicName: 'قَدْ سَمِعَ', startSurah: 'المجادلة (1)', endSurah: 'التحريم (12)', surahIds: [58, 59, 60, 61, 62, 63, 64, 65, 66], ayahsCount: 137 },
-  { number: 29, name: 'الجزء التاسع والعشرون', arabicName: 'تَبَارَكَ', startSurah: 'الملك (1)', endSurah: 'المرسلات (50)', surahIds: [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77], ayahsCount: 431 },
-  { number: 30, name: 'الجزء الثلاثون', arabicName: 'عَمَّ يَتَسَاءَلُونَ', startSurah: 'النبأ (1)', endSurah: 'الناس (6)', surahIds: Array.from({ length: 37 }, (_, i) => 78 + i), ayahsCount: 564 },
+  { number: 1, name: 'الجزء الأول', arabicName: 'الم', startSurah: 'الفاتحة (1)', endSurah: 'البقرة (141)', surahIds: [1, 2], ayahsCount: 148, startSurahId: 1, startAyahNumber: 1 },
+  { number: 2, name: 'الجزء الثاني', arabicName: 'سَيَقُولُ', startSurah: 'البقرة (142)', endSurah: 'البقرة (252)', surahIds: [2], ayahsCount: 111, startSurahId: 2, startAyahNumber: 142 },
+  { number: 3, name: 'الجزء الثالث', arabicName: 'تِلْكَ الرُّسُلُ', startSurah: 'البقرة (253)', endSurah: 'آل عمران (92)', surahIds: [2, 3], ayahsCount: 126, startSurahId: 2, startAyahNumber: 253 },
+  { number: 4, name: 'الجزء الرابع', arabicName: 'لَنْ تَنَالُوا', startSurah: 'آل عمران (93)', endSurah: 'النساء (23)', surahIds: [3, 4], ayahsCount: 131, startSurahId: 3, startAyahNumber: 93 },
+  { number: 5, name: 'الجزء الخامس', arabicName: 'وَالمُحْصَنَاتُ', startSurah: 'النساء (24)', endSurah: 'النساء (147)', surahIds: [4], ayahsCount: 124, startSurahId: 4, startAyahNumber: 24 },
+  { number: 6, name: 'الجزء السادس', arabicName: 'لَا يُحِبُّ اللَّهُ', startSurah: 'النساء (148)', endSurah: 'المائدة (81)', surahIds: [4, 5], ayahsCount: 110, startSurahId: 4, startAyahNumber: 148 },
+  { number: 7, name: 'الجزء السابع', arabicName: 'وَإِذَا سَمِعُوا', startSurah: 'المائدة (82)', endSurah: 'الأنعام (110)', surahIds: [5, 6], ayahsCount: 149, startSurahId: 5, startAyahNumber: 82 },
+  { number: 8, name: 'الجزء الثامن', arabicName: 'وَلَوْ أَنَّنَا', startSurah: 'الأنعام (111)', endSurah: 'الأعراف (87)', surahIds: [6, 7], ayahsCount: 142, startSurahId: 6, startAyahNumber: 111 },
+  { number: 9, name: 'الجزء التاسع', arabicName: 'قَالَ المَلَأُ', startSurah: 'الأعراف (88)', endSurah: 'الأنفال (40)', surahIds: [7, 8], ayahsCount: 159, startSurahId: 7, startAyahNumber: 88 },
+  { number: 10, name: 'الجزء العاشر', arabicName: 'وَاعْلَمُوا', startSurah: 'الأنفال (41)', endSurah: 'التوبة (92)', surahIds: [8, 9], ayahsCount: 127, startSurahId: 8, startAyahNumber: 41 },
+  { number: 11, name: 'الجزء الحادي عشر', arabicName: 'يَعْتَذِرُونَ', startSurah: 'التوبة (93)', endSurah: 'هود (5)', surahIds: [9, 10, 11], ayahsCount: 151, startSurahId: 9, startAyahNumber: 93 },
+  { number: 12, name: 'الجزء الثاني عشر', arabicName: 'وَمَا مِنْ دَابَّةٍ', startSurah: 'هود (6)', endSurah: 'يوسف (52)', surahIds: [11, 12], ayahsCount: 170, startSurahId: 11, startAyahNumber: 6 },
+  { number: 13, name: 'الجزء الثالث عشر', arabicName: 'وَمَا أُبَرِّئُ', startSurah: 'يوسف (53)', endSurah: 'إبراهيم (52)', surahIds: [12, 13, 14], ayahsCount: 154, startSurahId: 12, startAyahNumber: 53 },
+  { number: 14, name: 'الجزء الرابع عشر', arabicName: 'رُبَمَا', startSurah: 'الحجر (1)', endSurah: 'النحل (128)', surahIds: [15, 16], ayahsCount: 227, startSurahId: 15, startAyahNumber: 1 },
+  { number: 15, name: 'الجزء الخامس عشر', arabicName: 'سُبْحَانَ الَّذِي', startSurah: 'الإسراء (1)', endSurah: 'الكهف (74)', surahIds: [17, 18], ayahsCount: 185, startSurahId: 17, startAyahNumber: 1 },
+  { number: 16, name: 'الجزء السادس عشر', arabicName: 'قَالَ أَلَمْ', startSurah: 'الكهف (75)', endSurah: 'طه (135)', surahIds: [18, 19, 20], ayahsCount: 269, startSurahId: 18, startAyahNumber: 75 },
+  { number: 17, name: 'الجزء السابع عشر', arabicName: 'اقْتَرَبَ لِلنَّاسِ', startSurah: 'الأنبياء (1)', endSurah: 'الحج (78)', surahIds: [21, 22], ayahsCount: 190, startSurahId: 21, startAyahNumber: 1 },
+  { number: 18, name: 'الجزء الثامن عشر', arabicName: 'قَدْ أَفْلَحَ', startSurah: 'المؤمنون (1)', endSurah: 'الفرقان (20)', surahIds: [23, 24, 25], ayahsCount: 202, startSurahId: 23, startAyahNumber: 1 },
+  { number: 19, name: 'الجزء التاسع عشر', arabicName: 'وَقَالَ الَّذِينَ', startSurah: 'الفرقان (21)', endSurah: 'النمل (55)', surahIds: [25, 26, 27], ayahsCount: 339, startSurahId: 25, startAyahNumber: 21 },
+  { number: 20, name: 'الجزء العشرون', arabicName: 'فَمَا كَانَ جَوَابَ', startSurah: 'النمل (56)', endSurah: 'العنكبوت (45)', surahIds: [27, 28, 29], ayahsCount: 171, startSurahId: 27, startAyahNumber: 56 },
+  { number: 21, name: 'الجزء الحادي والعشرون', arabicName: 'وَلَا تُجَادِلُوا', startSurah: 'العنكبوت (46)', endSurah: 'الأحزاب (30)', surahIds: [29, 30, 31, 32, 33], ayahsCount: 178, startSurahId: 29, startAyahNumber: 46 },
+  { number: 22, name: 'الجزء الثاني والعشرون', arabicName: 'وَمَنْ يَقْنُتْ', startSurah: 'الأحزاب (31)', endSurah: 'يس (27)', surahIds: [33, 34, 35, 36], ayahsCount: 169, startSurahId: 33, startAyahNumber: 31 },
+  { number: 23, name: 'الجزء الثالث والعشرون', arabicName: 'وَمَا أَنْزَلْنَا', startSurah: 'يس (28)', endSurah: 'الزمر (31)', surahIds: [36, 37, 38, 39], ayahsCount: 357, startSurahId: 36, startAyahNumber: 28 },
+  { number: 24, name: 'الجزء الرابع والعشرون', arabicName: 'فَمَنْ أَظْلَمُ', startSurah: 'الزمر (32)', endSurah: 'فصلت (46)', surahIds: [39, 40, 41], ayahsCount: 175, startSurahId: 39, startAyahNumber: 32 },
+  { number: 25, name: 'الجزء الخامس والعشرون', arabicName: 'إِلَيْهِ يُرَدُّ', startSurah: 'فصلت (47)', endSurah: 'الجاثية (37)', surahIds: [41, 42, 43, 44, 45], ayahsCount: 246, startSurahId: 41, startAyahNumber: 47 },
+  { number: 26, name: 'الجزء السادس والعشرون', arabicName: 'حم', startSurah: 'الأحقاف (1)', endSurah: 'الذاريات (30)', surahIds: [46, 47, 48, 49, 50, 51], ayahsCount: 195, startSurahId: 46, startAyahNumber: 1 },
+  { number: 27, name: 'الجزء السابع والعشرون', arabicName: 'قَالَ فَمَا خَطْبُكُمْ', startSurah: 'الذاريات (31)', endSurah: 'الحديد (29)', surahIds: [51, 52, 53, 54, 55, 56, 57], ayahsCount: 399, startSurahId: 51, startAyahNumber: 31 },
+  { number: 28, name: 'الجزء الثامن والعشرون', arabicName: 'قَدْ سَمِعَ', startSurah: 'المجادلة (1)', endSurah: 'التحريم (12)', surahIds: [58, 59, 60, 61, 62, 63, 64, 65, 66], ayahsCount: 137, startSurahId: 58, startAyahNumber: 1 },
+  { number: 29, name: 'الجزء التاسع والعشرون', arabicName: 'تَبَارَكَ', startSurah: 'الملك (1)', endSurah: 'المرسلات (50)', surahIds: [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77], ayahsCount: 431, startSurahId: 67, startAyahNumber: 1 },
+  { number: 30, name: 'الجزء الثلاثون', arabicName: 'عَمَّ يَتَسَاءَلُونَ', startSurah: 'النبأ (1)', endSurah: 'الناس (6)', surahIds: Array.from({ length: 37 }, (_, i) => 78 + i), ayahsCount: 564, startSurahId: 78, startAyahNumber: 1 },
 ];

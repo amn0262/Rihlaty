@@ -1,11 +1,22 @@
-import { Surah, BadgeItem, CertificateItem } from '../types';
+import { Surah, BadgeItem, CertificateItem, ReciterId, RECITERS_LIST } from '../types';
 import { ALL_114_SURAHS, ALL_30_AJZAA, QuranJuz } from './allQuranData';
+import quranFullDatasetRaw from './quranFullDataset.json';
 
-export { ALL_114_SURAHS, ALL_30_AJZAA };
+export { ALL_114_SURAHS, ALL_30_AJZAA, RECITERS_LIST };
 export type { QuranJuz };
 
+export const TOTAL_QURAN_AYAHS = 6236;
+export const TOTAL_QURAN_SURAHS = 114;
 export const JUZ_AMMA_SURAHS_COUNT = 37;
 export const JUZ_AMMA_TOTAL_AYAHS = 564;
+
+interface RawAyahDatasetItem {
+  numberInSurah: number;
+  text: string;
+  tafseerText: string;
+}
+
+export const quranFullDataset = quranFullDatasetRaw as unknown as Record<string, RawAyahDatasetItem[]>;
 
 // Detailed data for Surahs of Juz Amma
 export const SURAHS_LIST_SUMMARY: Omit<Surah, 'ayahs'>[] = [
@@ -615,76 +626,56 @@ export const SURAH_114_NAS_AYAHS = [
   }
 ];
 
-// Helper to get full Surah data with ayahs
-export function getSurahWithAyahs(surahId: number): Surah {
-  const meta = ALL_114_SURAHS.find(s => s.id === surahId) || SURAHS_LIST_SUMMARY.find(s => s.id === surahId) || SURAHS_LIST_SUMMARY[0];
-
-  if (surahId === 78) {
-    return { ...meta, ayahs: SURAH_78_NABA_AYAHS };
-  }
-  if (surahId === 112) {
-    return { ...meta, ayahs: SURAH_112_IKHLAS_AYAHS };
-  }
-  if (surahId === 113) {
-    return { ...meta, ayahs: SURAH_113_FALAQ_AYAHS };
-  }
-  if (surahId === 114) {
-    return { ...meta, ayahs: SURAH_114_NAS_AYAHS };
-  }
-
-  // Generate standard ayah items with realistic text and child-friendly tafseer
-  const ayahs = Array.from({ length: meta.ayahsCount }, (_, i) => {
-    const ayahNum = i + 1;
-    const paddedSurah = String(meta.id).padStart(3, '0');
-    const paddedAyah = String(ayahNum).padStart(3, '0');
-    return {
-      numberInSurah: ayahNum,
-      text: getSampleAyahText(meta.id, ayahNum),
-      audioUrl: `https://everyayah.com/data/Alafasy_128kbps/${paddedSurah}${paddedAyah}.mp3`,
-      tafseer: {
-        simplifiedForKid: `شرح ميسر للآية (${ayahNum}) من سورة ${meta.name}: تدعونا هذه الآية الكريمة إلى استشعار قدرة الله والعمل الصالح والتحلي بالأخلاق الكريمة.`,
-        messageForYou: `رسالة لطيفة لك يا بطل: كل آية تحفظها من سورة ${meta.name} ترفعك درجة في الجنة وتزيدك ذكاءً ونوراً.`,
-        islamicValue: 'محبة القرآن وتطبيقه في حياتنا اليومية مع الوالدين والأصحاب.',
-        questionForReflection: `كيف نستطيع تطبيق تعاليم هذه الآية اليوم؟`
-      }
-    };
-  });
-
-  return { ...meta, ayahs };
+// Helper to get EveryAyah audio URL for specific reciter (Saad Al-Ghamdi or Mishary Alafasy)
+export function getAyahAudioUrl(
+  surahId: number,
+  ayahNumberInSurah: number,
+  reciter: ReciterId = 'alafasy'
+): string {
+  const folder = reciter === 'ghamadi' ? 'Ghamadi_40kbps' : 'Alafasy_128kbps';
+  const paddedSurah = String(surahId).padStart(3, '0');
+  const paddedAyah = String(ayahNumberInSurah).padStart(3, '0');
+  return `https://everyayah.com/data/${folder}/${paddedSurah}${paddedAyah}.mp3`;
 }
 
-function getSampleAyahText(surahId: number, ayahNum: number): string {
-  if (surahId === 79) {
-    const samples = [
-      'وَالنَّازِعَاتِ غَرْقًا',
-      'وَالنَّاشِطَاتِ نَشْطًا',
-      'وَالسَّابِحَاتِ سَبْحًا',
-      'فَالسَّابِقَاتِ سَبْقًا',
-      'فَالْمُدَبِّرَاتِ أَمْرًا',
-      'يَوْمَ تَرْجُفُ الرَّاجِفَةُ',
-      'تَتْبَعُهَا الرَّادِفَةُ',
-      'قُلُوبٌ يَوْمَئِذٍ وَاجِفَةٌ',
-      'أَبْصَارُهَا خَاشِعَةٌ',
-      'يَقُولُونَ أَإِنَّا لَمَرْدُودُونَ فِي الْحَافِرَةِ'
-    ];
-    return samples[ayahNum - 1] || `آيَةٌ كَرِيمَةٌ مِنْ سُورَةِ النَّازِعَاتِ (${ayahNum})`;
+// Helper to get full Surah data with complete authentic Uthmani ayahs (and audio for selected reciter)
+export function getSurahWithAyahs(surahId: number, reciter: ReciterId = 'alafasy'): Surah {
+  const meta =
+    ALL_114_SURAHS.find((s) => s.id === surahId) ||
+    SURAHS_LIST_SUMMARY.find((s) => s.id === surahId) ||
+    SURAHS_LIST_SUMMARY[0];
+
+  const datasetAyahs = quranFullDataset[String(meta.id)];
+
+  // Specialized rich kid reflection overrides map (for key surahs)
+  const specialSurahMap: Record<number, Array<{ numberInSurah: number; tafseer: any }>> = {
+    78: SURAH_78_NABA_AYAHS,
+    112: SURAH_112_IKHLAS_AYAHS,
+    113: SURAH_113_FALAQ_AYAHS,
+    114: SURAH_114_NAS_AYAHS,
+  };
+
+  if (datasetAyahs && datasetAyahs.length > 0) {
+    const ayahs = datasetAyahs.map((item) => {
+      const special = specialSurahMap[meta.id]?.find((a) => a.numberInSurah === item.numberInSurah);
+      return {
+        numberInSurah: item.numberInSurah,
+        text: item.text,
+        audioUrl: getAyahAudioUrl(meta.id, item.numberInSurah, reciter),
+        tafseer: special?.tafseer || {
+          simplifiedForKid:
+            item.tafseerText ||
+            `شرح وتفسير الآية (${item.numberInSurah}) من سورة ${meta.name}: تدعونا هذه الآية الكريمة إلى استشعار عظمة الله والعمل الصالح ومحبة الخير.`,
+          messageForYou: `رسالة لك يا بطل: كل آية تحفظها وتتدبرها من سورة ${meta.name} ترفعك درجات في الجنة وتزيدك ذكاءً ونوراً.`,
+          islamicValue: 'محبة القرآن الكريم وتطبيقه في حياتنا اليومية وحسن الخلق مع الجميع.',
+          questionForReflection: `كيف نطبق معاني هذه الآية المباركة في تعاملاتنا مع أهلنا وأصدقائنا؟`
+        }
+      };
+    });
+    return { ...meta, ayahs };
   }
-  if (surahId === 80) {
-    const samples = [
-      'عَبَسَ وَتَوَلَّىٰ',
-      'أَن جَاءَهُ الْأَعْمَىٰ',
-      'وَمَا يُدْرِيكَ لَعَلَّهُ يَزَّكَّىٰ',
-      'أَوْ يَذَّكَّرُ فَتَنفَعَهُ الذِّكْرَىٰ',
-      'أَمَّا مَنِ اسْتَغْنَىٰ',
-      'فَأَنتَ لَهُ تَصَدَّىٰ',
-      'وَمَا عَلَيْكَ أَلَّا يَزَّكَّىٰ',
-      'وَأَمَّا مَن جَاءَكَ يَسْعَىٰ',
-      'وَهُوَ يَخْشَىٰ',
-      'فَأَنتَ عَنْهُ تَلَهَّىٰ'
-    ];
-    return samples[ayahNum - 1] || `آيَةٌ كَرِيمَةٌ مِنْ سُورَةِ عَبَسَ (${ayahNum})`;
-  }
-  return `آيَةٌ كَرِيمَةٌ (${ayahNum}) مِنْ سُورَةِ ${SURAHS_LIST_SUMMARY.find(s => s.id === surahId)?.arabicName || ''}`;
+
+  return { ...meta, ayahs: [] };
 }
 
 export const INITIAL_BADGES: BadgeItem[] = [
